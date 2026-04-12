@@ -58,6 +58,7 @@ ynh_script_progression "Initialising database..."
 pushd "$install_dir"
     ynh_exec_as_app LIBREDESK_SYSTEM_USER_PASSWORD="$password" \
         ./libredesk --install --idempotent-install --yes --config config.toml
+    ynh_exec_as_app ./libredesk --upgrade --yes --config config.toml
 popd
 
 #=================================================
