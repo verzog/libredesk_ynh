@@ -12,8 +12,9 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression "Stopping and removing service..."
 
-ynh_systemctl --service="$app" --action="stop"
-yunohost service remove "$app"
+if ynh_hide_warnings yunohost service status "$app" >/dev/null; then
+    yunohost service remove "$app"
+fi
 
 #=================================================
 # REMOVE NGINX CONFIGURATION
@@ -28,6 +29,13 @@ ynh_config_remove_nginx
 ynh_script_progression "Removing systemd service..."
 
 ynh_config_remove_systemd
+
+#=================================================
+# REMOVE LOGROTATE CONFIGURATION
+#=================================================
+ynh_script_progression "Removing logrotate configuration..."
+
+ynh_config_remove_logrotate
 
 #=================================================
 # END OF SCRIPT

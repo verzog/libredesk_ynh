@@ -42,12 +42,22 @@ pushd "$install_dir"
 popd
 
 #=================================================
-# UPDATE NGINX AND SYSTEMD CONFIGURATION
+# UPDATE NGINX, SYSTEMD, AND LOGROTATE CONFIGURATION
 #=================================================
 ynh_script_progression "Updating configuration files..."
 
+mkdir -p /var/log/$app
+chown $app:adm /var/log/$app
+chmod 750 /var/log/$app
+
 ynh_config_add_systemd
+ynh_config_add_logrotate
 ynh_config_add_nginx
+
+#=================================================
+# REREGISTER SERVICE
+#=================================================
+yunohost service add "$app" --description="LibreDesk customer support desk" --log="/var/log/$app/$app.log"
 
 #=================================================
 # START SERVICE
