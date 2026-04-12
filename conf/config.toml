@@ -7,7 +7,9 @@ encryption_key = "__ENCRYPTION_KEY__"
 [app.server]
 address = "127.0.0.1:__PORT__"
 socket = ""
-disable_secure_cookies = false
+# YunoHost terminates TLS at nginx and proxies plain HTTP to LibreDesk.
+# Secure cookies must be disabled so the browser does not silently drop them.
+disable_secure_cookies = true
 read_timeout = "5s"
 write_timeout = "5s"
 max_body_size = 104857600
