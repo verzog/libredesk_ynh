@@ -45,9 +45,12 @@ default = "visitors"
 type = "user"
 
 [install.password]
-help.en = "This will be the password for the initial 'System' admin account in LibreDesk."
-help.fr = "Ce sera le mot de passe du compte administrateur 'System' initial dans LibreDesk."
+help.en = "Password for the initial 'System' admin account. Must be 10-72 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+help.fr = "Mot de passe du compte administrateur 'System' initial. Doit comporter 10-72 caractères et contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial."
 type = "password"
+pattern.regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{10,72}$"
+pattern.error.en = "Password must be 10-72 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+pattern.error.fr = "Le mot de passe doit comporter 10-72 caractères et contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial."
 
 [resources]
 
