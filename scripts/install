@@ -43,6 +43,14 @@ chmod 600 "$install_dir/config.toml"
 chown "$app:$app" "$install_dir/config.toml"
 
 #=================================================
+# VALIDATE PASSWORD STRENGTH
+#=================================================
+
+if ! echo "$password" | grep -qP '^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{10,72}$'; then
+    ynh_die "The password must be 10-72 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+fi
+
+#=================================================
 # INITIALISE THE DATABASE SCHEMA
 #=================================================
 ynh_script_progression "Initialising database..."
