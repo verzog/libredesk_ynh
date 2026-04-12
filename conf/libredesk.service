@@ -1,0 +1,27 @@
+[Unit]
+Description=LibreDesk – self-hosted customer support desk
+After=network.target postgresql.service redis-server.service
+Wants=postgresql.service redis-server.service
+
+[Service]
+Type=simple
+User=__APP__
+Group=__APP__
+WorkingDirectory=__INSTALL_DIR__
+ExecStart=__INSTALL_DIR__/libredesk --config __INSTALL_DIR__/config.toml
+
+# Restart on failure
+Restart=on-failure
+RestartSec=5s
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=__DATA_DIR__
+
+# Environment
+Environment="HOME=__INSTALL_DIR__"
+
+[Install]
+WantedBy=multi-user.target

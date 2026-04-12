@@ -1,0 +1,25 @@
+# Runs the YunoHost automated packaging tests on every push and pull request.
+name: Integration tests
+
+on:
+  push:
+    branches:
+      - main
+      - testing
+  pull_request:
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run package linter
+        uses: yunohost/actions-package-linter@v1
+
+      - name: Run integration tests
+        uses: yunohost/actions-package-integration-tests@v1
+        with:
+          app: libredesk
+          yunohost_version: stable

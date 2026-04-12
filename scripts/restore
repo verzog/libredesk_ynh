@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# RESTORE THE DATABASE
+#=================================================
+ynh_script_progression "Restoring the database..."
+
+ynh_postgresql_restore_db
+
+#=================================================
+# RESTORE THE APP AND DATA DIRECTORIES
+#=================================================
+ynh_script_progression "Restoring application files..."
+
+ynh_restore "$install_dir"
+ynh_restore "$data_dir"
+
+chmod +x "$install_dir/libredesk"
+chmod 600 "$install_dir/config.toml"
+chown -R "$app:$app" "$install_dir" "$data_dir"
+
+#=================================================
+# RESTORE NGINX AND SYSTEMD CONFIGURATION
+#=================================================
+ynh_script_progression "Restoring configuration files..."
+
+ynh_restore_nginx
+ynh_restore_systemd
+
+#=================================================
+# START SERVICE
+#=================================================
+ynh_script_progression "Starting LibreDesk..."
+
+yunohost service add "$app" --description="LibreDesk customer support desk" --log="/var/log/$app/$app.log"
+ynh_systemctl --service="$app" --action="start"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+ynh_script_progression "Restore of LibreDesk completed!"

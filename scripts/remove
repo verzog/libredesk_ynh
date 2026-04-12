@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# STOP AND REMOVE SERVICE
+#=================================================
+ynh_script_progression "Stopping and removing service..."
+
+ynh_systemctl --service="$app" --action="stop"
+yunohost service remove "$app"
+
+#=================================================
+# REMOVE NGINX CONFIGURATION
+#=================================================
+ynh_script_progression "Removing nginx configuration..."
+
+ynh_config_remove_nginx
+
+#=================================================
+# REMOVE SYSTEMD CONFIGURATION
+#=================================================
+ynh_script_progression "Removing systemd service..."
+
+ynh_config_remove_systemd
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+ynh_script_progression "Removal of LibreDesk completed!"

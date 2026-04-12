@@ -1,0 +1,42 @@
+[app]
+log_level = "info"
+env = "prod"
+check_updates = true
+# 32-character encryption key – generated during install
+encryption_key = "__ENCRYPTION_KEY__"
+
+[app.server]
+address = "127.0.0.1:__PORT__"
+
+[db]
+host = "127.0.0.1"
+port = 5432
+user = "__DB_USER__"
+password = "__DB_PWD__"
+database = "__DB_NAME__"
+ssl_mode = "disable"
+max_open = 25
+max_idle = 25
+max_lifetime = "300s"
+
+[redis]
+address = "127.0.0.1:6379"
+password = ""
+db = 0
+
+[upload]
+# Store uploaded files on the local filesystem
+store = "fs"
+
+[upload.fs]
+upload_path = "__DATA_DIR__/uploads"
+expiry = "1h"
+
+[upload.s3]
+url = ""
+access_key = ""
+secret_key = ""
+region = ""
+bucket = ""
+bucket_path = ""
+expiry = "30m"

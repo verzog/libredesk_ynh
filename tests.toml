@@ -1,0 +1,11 @@
+test_format = 1.0
+
+[default]
+# The default test suite runs on a clean install of the app.
+# We set the path to "/" because LibreDesk needs to run at the domain root
+# (it does not support sub-path deployment natively).
+args.domain = "domain.tld"
+args.init_main_permission = "visitors"
+
+# LibreDesk requires a dedicated domain (cannot run at a sub-path)
+# because its SPA router handles all routing internally.

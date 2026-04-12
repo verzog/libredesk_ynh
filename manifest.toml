@@ -1,0 +1,90 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/main/schemas/manifest.v2.schema.json
+
+packaging_format = 2
+
+id = "libredesk"
+name = "LibreDesk"
+description.en = "Open source, self-hosted customer support desk with shared inbox and automation"
+description.fr = "Helpdesk open source auto-hébergé avec boîte de réception partagée et automatisation"
+
+version = "0.11.0~ynh1"
+
+maintainers = ["your-github-username"]
+
+[upstream]
+license = "AGPL-3.0"
+website = "https://libredesk.io"
+admindoc = "https://docs.libredesk.io"
+userdoc = "https://docs.libredesk.io"
+code = "https://github.com/abhinavxd/libredesk"
+
+[integration]
+yunohost = ">= 12.1.17"
+helpers_version = "2.1"
+architectures = ["amd64", "arm64"]
+multi_instance = false
+
+# LibreDesk has its own login system; it does not support LDAP/SSO natively
+ldap = false
+sso = false
+
+disk = "200M"
+ram.build = "50M"
+ram.runtime = "256M"
+
+[install]
+
+[install.domain]
+type = "domain"
+
+[install.init_main_permission]
+type = "group"
+default = "visitors"
+
+[install.admin]
+type = "user"
+
+[install.password]
+help.en = "This will be the password for the initial 'System' admin account in LibreDesk."
+help.fr = "Ce sera le mot de passe du compte administrateur 'System' initial dans LibreDesk."
+type = "password"
+
+[resources]
+
+[resources.sources]
+
+[resources.sources.main]
+# amd64 binary
+url = "https://github.com/abhinavxd/libredesk/releases/download/v0.11.0-beta/libredesk_0.11.0-beta_linux_amd64.tar.gz"
+sha256 = "c9cfb087eef199a22d4a194b97c7ff439372dbb5d393644dc43d21a68b24c1db"
+format = "tar.gz"
+in_subdir = false
+# autoupdate.strategy = "latest_github_release"
+# autoupdate.asset.amd64 = "libredesk_.*_linux_amd64.tar.gz"
+# autoupdate.asset.arm64 = "libredesk_.*_linux_arm64.tar.gz"
+
+[resources.sources.main_arm64]
+url = "https://github.com/abhinavxd/libredesk/releases/download/v0.11.0-beta/libredesk_0.11.0-beta_linux_arm64.tar.gz"
+sha256 = "473fbe012986065e999e86fd426e32bad493793d8d83b32fbd96c54b2f3ca8c7"
+format = "tar.gz"
+in_subdir = false
+
+[resources.system_user]
+
+[resources.install_dir]
+# LibreDesk will be installed at /var/www/libredesk
+
+[resources.data_dir]
+# Uploaded files will be stored at /home/yunohost.app/libredesk
+
+[resources.permissions]
+main.url = "/"
+
+[resources.ports]
+# A random local port will be picked and stored as $port
+
+[resources.apt]
+packages = ["postgresql", "redis-server"]
+
+[resources.database]
+type = "postgresql"

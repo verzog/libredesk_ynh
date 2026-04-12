@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+ynh_print_info "Declaring files to be backed up..."
+
+#=================================================
+# BACKUP THE APP DIR (BINARY + CONFIG)
+#=================================================
+
+ynh_backup "$install_dir"
+
+#=================================================
+# BACKUP THE DATA DIR (UPLOADS)
+#=================================================
+
+ynh_backup "$data_dir"
+
+#=================================================
+# BACKUP NGINX AND SYSTEMD CONFIGURATION
+#=================================================
+
+ynh_backup_nginx
+ynh_backup_systemd
+
+#=================================================
+# BACKUP THE DATABASE
+#=================================================
+
+ynh_postgresql_dump_db
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_print_info "Backup script completed for LibreDesk."

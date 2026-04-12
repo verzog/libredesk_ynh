@@ -1,0 +1,80 @@
+#!/bin/bash
+
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+ynh_script_progression "Installing LibreDesk binary..."
+
+# Pick the right binary for the current CPU architecture
+if [ "$(uname -m)" = "aarch64" ]; then
+    ynh_setup_source --dest_dir="$install_dir" --source_id="main_arm64"
+else
+    ynh_setup_source --dest_dir="$install_dir"
+fi
+
+chmod +x "$install_dir/libredesk"
+
+#=================================================
+# CREATE DATA DIRECTORY & UPLOADS FOLDER
+#=================================================
+ynh_script_progression "Setting up data directory..."
+
+mkdir -p "$data_dir/uploads"
+chown -R "$app:$app" "$data_dir"
+
+#=================================================
+# GENERATE ENCRYPTION KEY AND WRITE CONFIG
+#=================================================
+ynh_script_progression "Writing configuration..."
+
+encryption_key=$(openssl rand -hex 16)
+ynh_app_setting_set --key=encryption_key --value="$encryption_key"
+
+ynh_config_add --template="config.toml" --destination="$install_dir/config.toml"
+
+chmod 600 "$install_dir/config.toml"
+chown "$app:$app" "$install_dir/config.toml"
+
+#=================================================
+# INITIALISE THE DATABASE SCHEMA
+#=================================================
+ynh_script_progression "Initialising database..."
+
+pushd "$install_dir"
+    ynh_exec_as_app LIBREDESK_SYSTEM_USER_PASSWORD="$password" \
+        ./libredesk --install --idempotent-install --yes --config config.toml
+popd
+
+#=================================================
+# SET UP SYSTEMD SERVICE
+#=================================================
+ynh_script_progression "Configuring systemd service..."
+
+ynh_config_add_systemd
+
+#=================================================
+# SET UP NGINX
+#=================================================
+ynh_script_progression "Configuring nginx..."
+
+ynh_config_add_nginx
+
+#=================================================
+# START SERVICE
+#=================================================
+ynh_script_progression "Starting LibreDesk..."
+
+yunohost service add "$app" --description="LibreDesk customer support desk" --log="/var/log/$app/$app.log"
+ynh_systemctl --service="$app" --action="start"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+ynh_script_progression "Installation of LibreDesk completed!"

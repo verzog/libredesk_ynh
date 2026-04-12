@@ -1,0 +1,22 @@
+# Automatically checks for new LibreDesk releases and opens a PR to update the package.
+# Runs every day at 06:00 UTC.
+name: Auto-update upstream version
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  updater:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run YunoHost source auto-updater
+        uses: yunohost-bot/actions-app-autoupdater@v0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # The bot will look at [resources.sources.main] in manifest.toml
+          # and use the autoupdate strategy defined there.
