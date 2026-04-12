@@ -61,10 +61,6 @@ pushd "$install_dir"
     ynh_exec_as_app ./libredesk --upgrade --yes --config config.toml
 popd
 
-# LibreDesk creates the system user with email 'System' which is not a valid
-# email address and causes the login form to reject it. Fix it to a real address.
-ynh_psql_db_shell <<< "UPDATE users SET email = 'system@${domain}' WHERE email = 'System';"
-
 #=================================================
 # SET UP SYSTEMD SERVICE
 #=================================================
